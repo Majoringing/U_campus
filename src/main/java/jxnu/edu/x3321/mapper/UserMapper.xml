@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 包名+sql映射文件名保证命名空间的唯一 -->
+<mapper namespace="jxnu.edu.x3321.mapper.UserMapper">
+
+	<select id="loginCheck" parameterType="map"
+		resultType="jxnu.edu.x3321.domain.User">
+		select * from user where mobilePhoneNumber=#{mobilePhoneNumber}
+	</select>
+
+	<select id="getUserList" resultType="jxnu.edu.x3321.domain.User">
+		select * from user
+	</select>
+	<!-- 用户信息修改 -->
+	<update id="update" parameterType="jxnu.edu.x3321.domain.User">
+		update user set username=#{username},
+		sno=#{sno},birthday=#{birthday} ,major=#{major},
+		sign=#{sign},campus=#{campus},head=#{head}
+		where userId=#{userId}
+	</update>
+	
+	<select id="get" parameterType="_int" resultType="jxnu.edu.x3321.domain.User">
+		select * from user where userId=#{userId}
+	</select>
+	
+	<!-- 用户删除 -->
+	<delete id="delete" parameterType="jxnu.edu.x3321.domain.User">
+		delete from user where userId=#{userId}
+	</delete>
+	
+	
+	<insert id="add" parameterType="jxnu.edu.x3321.domain.User">
+       insert into user(mobilePhoneNumber,username,password) values(#{mobilePhoneNumber},#{username},
+       #{password})
+    </insert>
+
+
+</mapper>

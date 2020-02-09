@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<!-- 包名+sql映射文件名保证命名空间的唯一 -->
+<mapper namespace="jxnu.edu.x3321.mapper.QuestionMapper" >
+	<resultMap id="question" type="jxnu.edu.x3321.domain.Question" >
+		<id column="questionId" property="questionId"/>
+		<result column="question_image" property="question_image"/>
+		<result column="plate_id" property="plate_id"/>
+		<result column="keyword" property="keyword"/>
+		<result column="title" property="title"/>
+		<result column="reviewsum" property="reviewsum"/>
+		<result column="pointsum" property="pointsum"/>
+		<result column="content" property="content"/>
+		<result column="campus" property="campus"/>
+		<result column="createtime" property="createtime"/>
+      	<association property="question_user" javaType="jxnu.edu.x3321.domain.User">
+      		<id column="userId" property="userId"/>
+      		<result column="username" property="username"/>
+      		<result column="head" property="head"/>
+      	</association>
+      	
+      	<association property="question_plates" javaType="jxnu.edu.x3321.domain.Plates">
+      		<id column="plate_id" property="plate_id"/>
+      		<result column="plate_name" property="plate_name"/>
+      	</association>
+	
+	</resultMap>
+	
+	<select id="get" parameterType="_int" resultMap="question">
+		select 
+			questionId,
+			question_image,
+			keyword,
+			title,
+			user_id,
+			reviewsum,
+			pointsum,
+			content,
+			question.campus,
+			question.createtime,
+			user.userId,
+			user.username,
+			plate_name
+			FROM question,user,plates
+			WHERE
+			question.user_id=user.userId and plates.plate_id=question.plate_id and  questionId=#{questionId}
+	</select>
+	<!-- 得到问题列表 -->
+	<select id="getQuestionList" resultMap="question" >
+		select 
+			questionId,
+			question_image,
+			plate_id,
+			keyword,
+			title,
+			user_id,
+			reviewsum,
+			pointsum,
+			content,
+			question.campus,
+			question.createtime,
+			user.userId,
+			user.username,
+			user.head
+			FROM question,user
+			WHERE
+			question.user_id=user.userId 
+	</select>
+	<!-- 根据作者的id查询出问题 -->
+	<select id="getQuestionListById"  parameterType="_int" resultMap="question" >
+		select 
+			questionId,
+			question_image,
+			plate_id,
+			keyword,
+			title,
+			reviewsum,
+			pointsum,
+			content,
+			question.campus,
+			question.createtime,
+			user.userId,
+			user.username
+			FROM question,user
+			WHERE
+			question.user_id=user.userId and user_id=#{user_id}
+	</select>
+	
+	<select id="getQ_FBykeyword" parameterType="java.lang.String" resultType="jxnu.edu.x3321.domain.Question" >
+		select *
+			from question
+			where
+			keyword LIKE CONCAT('%',#{key,jdbcType=VARCHAR},'%') or title LIKE CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+			or content LIKE CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+	</select>
+	
+	<delete id="delete" parameterType="jxnu.edu.x3321.domain.Question">
+		delete from question where questionId=#{questionId}
+	</delete>
+	<insert id="add" parameterType="jxnu.edu.x3321.domain.Question">
+       insert into question(question_image,user_id,plate_id,keyword,title,content,campus) 
+       values(#{question_image},#{user_id},#{plate_id},#{keyword},#{title},#{content},#{campus} )
+    </insert>
+	
+
+	
+</mapper>

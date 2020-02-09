@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd"> 
+    <!-- Uncomment and add your base-package here:
+         <context:component-scan
+            base-package="org.springframework.samples.service"/>  -->
+     
+     
+     
+      <!-- 打开注解处理器 -->
+      <context:annotation-config/>
+      <!-- 指定路径扫描的路径 -->
+      <context:component-scan base-package="jxnu.edu.x3321.service, jxnu.edu.x3321.service.impl"/>
+      
+            
+      <!-- 1. 配置数据连接池 -->
+     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	       <!-- 配置数据连接池属性 -->
+	       <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+	       <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/u_campus?characterEncoding=UTF-8"/>              
+	       <property name="user" value="root" />
+	       <property name="password" value="" />
+	       <!-- c3p0连接池属性 -->
+	       <property name="maxPoolSize" value="30"/>
+	       <property name="minPoolSize" value="10"/>
+	    </bean>
+	    <!-- 2.配置SqlSessionFactory对象 -->
+	    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <!-- 注入数据库连接池 -->
+	       <property name="dataSource" ref="dataSource"/>
+	       <!-- 扫描entity(domain/pojo)包 -->
+	       <property name="typeAliasesPackage" value="jxnu.edu.x3321.domain"/>
+	       <!-- 扫描sql配置文件:mapper需要的xml -->
+	       <property name="mapperLocations" value="classpath:jxnu/edu/x3321/mapper/*.xml"/>
+	       <!-- 加载分页插件 -->
+	       <property name="plugins">
+	          <array>
+	             <bean class="com.github.pagehelper.PageHelper">
+	                <property name="properties">
+	                   <value>
+	                      dialect=mysql
+	                      reasonable=true
+	                   </value>
+	                </property>
+	             </bean>
+	          </array>
+	       </property>
+	    
+	    </bean>
+	    <!-- 3.配置扫描mapper接口包，动态实现Mapper接口，注入到spring容器 -->
+	    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	         <!-- 注入sqlSessionFactory -->
+	       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	       <!-- 给出需要扫描人Mapper接口包 -->
+	       <property name="basePackage" value="jxnu.edu.x3321.mapper"/>  
+	    </bean>
+	    <!-- 4.配置事务处理器 -->
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <!-- 注入数据库连接池 -->
+	       <property name="dataSource" ref="dataSource"/>
+         </bean> 
+        <!-- 5.配置基于注解的声明事务 -->
+        <tx:annotation-driven transaction-manager="transactionManager"/> 	
+   	
+   	
+   	<!-- 配置多媒体文件解析器 -->
+    <!-- 文件上传 -->
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置默认编码 -->  
+        <property name="defaultEncoding" value="utf-8"></property>
+        <!-- 设置上传文件的最大尺寸为5MB -->
+        <property name="maxUploadSize">
+            <value>5242880</value>
+        </property>
+    </bean>
+
+</beans>

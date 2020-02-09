@@ -1,0 +1,16 @@
+package jxnu.edu.x3321.service;
+
+import java.util.List;
+
+import jxnu.edu.x3321.domain.Files;
+
+public interface FilesService {
+	
+	public int add(Files files);
+	
+	//根据关键字显示问题列表
+	public List<Files> getFBykeyword(String key);
+	
+	public Files get(int fileId);
+
+}

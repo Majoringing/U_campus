@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<!-- 包名+sql映射文件名保证命名空间的唯一 -->
+<mapper namespace="jxnu.edu.x3321.mapper.ReviewsMapper" >
+	<resultMap id="reviews" type="jxnu.edu.x3321.domain.Reviews" >
+		<id column="review_id" property="review_id"/>
+		<result column="review_image" property="review_image"/>
+		<result column="review_content" property="review_content"/>
+		<result column="questionId" property="questionId"/>
+		<result column="createtime" property="createtime"/>
+      	<association property="review_user" javaType="jxnu.edu.x3321.domain.User">
+      		<id column="userId" property="userId"/>
+      		<result column="username" property="username"/>
+      		<result column="head" property="head"/>
+      	</association>
+	</resultMap>
+	<!-- 根据问题查询所有评论 -->
+	<select id="getReviewsListById"  parameterType="_int" resultMap="reviews" >
+		select 
+			review_id,
+			review_image,
+			review_content,
+			reviews.questionId,
+			review_userId,
+			reviews.createtime,
+			user.userId,
+			user.username,
+			user.head			
+			from reviews,user
+			where
+			reviews.review_userId=user.userId and questionId=#{questionId}
+	</select>
+	
+	<select id="getReviewsList" resultType="jxnu.edu.x3321.domain.Reviews">
+		select * from reviews
+	</select>
+	
+	
+	
+	<select id="get" parameterType="_int" resultType="jxnu.edu.x3321.domain.Reviews">
+		select * from reviews where review_id=#{review_id}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="jxnu.edu.x3321.domain.Reviews">
+		delete from reviews where review_id=#{review_id}
+	</delete>
+	<!-- 添加评论 -->
+	<insert id="add" parameterType="jxnu.edu.x3321.domain.Reviews">
+       insert into reviews(review_image,review_content,review_userId,questionId) 
+       values(#{review_image},#{review_content},#{review_userId},#{questionId} )
+    </insert>
+	
+
+	
+
+</mapper>

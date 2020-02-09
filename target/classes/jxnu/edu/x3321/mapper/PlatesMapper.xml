@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<!-- 包名+sql映射文件名保证命名空间的唯一 -->
+<mapper namespace="jxnu.edu.x3321.mapper.PlatesMapper" >
+	
+
+	<select id="getPlateList" resultType="jxnu.edu.x3321.domain.Plates">
+		select * from plates
+	</select>
+	
+	
+	
+	<select id="get" parameterType="_int" resultType="jxnu.edu.x3321.domain.Plates">
+		select * from plates where plate_id=#{plate_id}
+	</select>
+	
+	<!-- 用户删除 -->
+	<delete id="delete" parameterType="jxnu.edu.x3321.domain.Plates">
+		delete from plates where plate_id=#{plate_id}
+	</delete>
+	
+	
+	<insert id="add" parameterType="jxnu.edu.x3321.domain.Plates">
+       insert into plates(plate_name) values(#{plate_name})
+    </insert>
+	
+	
+	
+
+</mapper>
